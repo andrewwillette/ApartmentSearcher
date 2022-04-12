@@ -41,16 +41,25 @@ func apartmentsExist(apartments []uliApartmentQuery) {
 			log.Fatal(err)
 		}
 		body, err := ioutil.ReadAll(resp.Body)
-		fmt.Println(string(body))
 
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		noApartments, err := regexp.MatchString("we currently do not have any available units that meet this spec", string(body))
+		html := string(body)
+		noAvailableApartments, err := regexp.MatchString("we currently do not have any available units that meet this spec", html)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Printf("Apartment: %s\nMonth: %s\nAvailable: %t\n\n", aptmt.apartmentName, aptmt.date, !noApartments)
+		if !noAvailableApartments {
+			// search for available apartments in text
+			fmt.Println("match below")
+			r, _ := regexp.Compile("avail-date(.|\\s|)*[^d]")
+			fmt.Println(r.FindString(html))
+			// fmt.Println(string(body))
+			fmt.Printf("Apartment: %s\nMonth: %s\nAvailable: %t\n\n", aptmt.apartmentName, aptmt.date, !noAvailableApartments)
+		} else {
+			// fmt.Printf("Apartment: %s\nMonth: %s\nAvailable: %t\n\n", aptmt.apartmentName, aptmt.date, !noAvailableApartments)
+		}
 	}
 }
