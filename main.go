@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"regexp"
 )
 
@@ -52,12 +53,18 @@ func apartmentsExist(apartments []uliApartmentQuery) {
 			log.Fatal(err)
 		}
 		if !noAvailableApartments {
-			// search for available apartments in text
-			fmt.Println("match below")
-			r, _ := regexp.Compile("avail-date(.|\\s|)*[^d]")
-			fmt.Println(r.FindString(html))
-			// fmt.Println(string(body))
-			fmt.Printf("Apartment: %s\nMonth: %s\nAvailable: %t\n\n", aptmt.apartmentName, aptmt.date, !noAvailableApartments)
+			r, _ := regexp.Compile("avail-date\">Available\\s*\\d*/\\d*/\\d*")
+			htmlParsed1 := r.FindString(html)
+			r2, _ := regexp.Compile("\\d*/\\d*/\\d*")
+			availDate := r2.FindString(htmlParsed1)
+			fmt.Printf("Apartment: %s\nMonth: %s\nAvailable Date: %s\n", aptmt.apartmentName, aptmt.date, availDate)
+			decodedValue, err := url.QueryUnescape(aptmt.url)
+			if err != nil {
+				log.Fatal(err)
+				return
+			}
+			fmt.Println(aptmt.url)
+			fmt.Println(decodedValue)
 		} else {
 			// fmt.Printf("Apartment: %s\nMonth: %s\nAvailable: %t\n\n", aptmt.apartmentName, aptmt.date, !noAvailableApartments)
 		}
