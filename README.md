@@ -1,6 +1,6 @@
 # ApartmentSearcher
 
-I'm looking to buy some apartment or another, this is some regex on html pages to give me info I want related to availability.
+I'm looking to buy some apartment or another, this is some regex on html pages to give me info I want quickly at the terminal.
 
 Example output:
 
