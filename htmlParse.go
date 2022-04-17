@@ -25,7 +25,9 @@ func getUnitTitle(html string) string {
 	sqFootstage1 := r.FindString(html)
 	r, _ = regexp.Compile(`>.*<`)
 	result := r.FindString(sqFootstage1)
-	return result
+	r, _ = regexp.Compile(`[^>][^<]*`)
+	result2 := r.FindString(result)
+	return result2
 }
 
 // getSqFootage parse html for square footage
@@ -42,7 +44,7 @@ func getSqFootage(html string) int {
 // getBedrooms parse html string for total bedrooms
 // must be single apartment
 func getBedrooms(html string) int {
-	r, _ := regexp.Compile(`\d\sBedrooms`)
+	r, _ := regexp.Compile(`\d\sBedroom`)
 	bedroom1 := r.FindString(html)
 	r, _ = regexp.Compile(`\d{1,2}`)
 	result := r.FindString(bedroom1)
